@@ -33,14 +33,7 @@ def get_files_in_directory(directory):
 
 
 
-if __name__ == "__main__":
-
-
-    # 指定目录路径
-    root_path = "C:\\Video\\B站源\\户晨风\\视频处理"
-
-
-
+def CreateMP4File(root_path):
     subDirs = get_subdirectories(root_path)
 
     for sDir in subDirs:
@@ -53,15 +46,47 @@ if __name__ == "__main__":
         files = glob.glob(file_pattern, recursive=True)
         # 首发
         # 输入的音频和视频 M4S 文件路径
-        input_video_m4s_path = files[0]
-        input_audio_m4s_path = files[1]
-        # 输出的合并后的 MP4 文件路径
-        dirBasename = os.path.basename(sDir)
-        output_merged_mp4_path = os.path.join(sDir,dirBasename) + "Toutput.mp4"
-        # 确保输出文件夹存在
-        os.makedirs(os.path.dirname(output_merged_mp4_path), exist_ok=True)
-        merge_audio_video(input_audio_m4s_path, input_video_m4s_path, output_merged_mp4_path)
+        try:
+            input_video_m4s_path = files[0]
+            input_audio_m4s_path = files[1]
+            # 输出的合并后的 MP4 文件路径
+            dirBasename = os.path.basename(sDir)
+            output_merged_mp4_path = os.path.join(sDir,dirBasename) + "Toutput.mp4"
+            # 确保输出文件夹存在
+            os.makedirs(os.path.dirname(output_merged_mp4_path), exist_ok=True)
+            merge_audio_video(input_audio_m4s_path, input_video_m4s_path, output_merged_mp4_path)
+            
+            print(output_merged_mp4_path + "合并完成！")
+        except IndexError as e:
+            continue
+        
+        
+def DeleteM4SFile(root_path):
+    subDirs = get_subdirectories(root_path)
 
-        print(output_merged_mp4_path + "合并完成！")
+    for sDir in subDirs:
+        # 指定文件扩展名
+        file_extension = ".m4s"  # 替换为您要获取的文件类型，例如 .txt、.jpg 等
+
+        # 构建文件路径模式
+        file_pattern = os.path.join(sDir, '**', f'*{file_extension}')
+        # 获取文件列表
+        files = glob.glob(file_pattern, recursive=True)
+        # 获取M4S 文件路径并删除
+        for orgFile in files:
+            # 删除文件
+            os.remove(orgFile)        
+            print(orgFile + "已删除！")
+       
+
+if __name__ == "__main__":
+
+    # 指定目录路径
+    root_path = "C:\\Video\\B站源\\户晨风\\d0927"
+    #合并音视频文件创建MP4视频文件
+    CreateMP4File(root_path)
+    #删除源文件M4S
+    # DeleteM4SFile(root_path)
+        
     
 
